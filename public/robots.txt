@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Block auth and dashboard from indexing
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /dashboard/
+
+Sitemap: https://blumehealthco.com/sitemap.xml
