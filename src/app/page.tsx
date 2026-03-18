@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Hero from "@/components/Hero";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import WhySection from "@/components/WhySection";
+import HowItWorks from "@/components/HowItWorks";
 
 export const metadata: Metadata = {
   title: "Blume Health | Private Practice Marketing & Online Growth Platform",
@@ -70,6 +71,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}
       />
       <Hero />
+      <HowItWorks />
       <WhySection />
       <TestimonialsSection />
     </>
