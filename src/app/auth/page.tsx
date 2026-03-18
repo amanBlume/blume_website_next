@@ -1,14 +1,12 @@
 "use client"
 import React, { useState } from 'react';
 import { Eye, EyeOff, Heart, Mail, Lock, User, ArrowRight } from 'lucide-react';
-import { useSignIn, useSignUp, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 
 const AuthPage: React.FC = () => {
-  const { signIn, setActive, isLoaded: signInLoaded } = useSignIn();
-  const { signUp, setActive: setSignUpActive, isLoaded: signUpLoaded } = useSignUp();
-  const { user } = useUser();
   const router = useRouter();
+  const signInLoaded = true;
+  const signUpLoaded = true;
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -24,13 +22,6 @@ const AuthPage: React.FC = () => {
     agreeToTerms: false
   });
 
-  // Redirect if already signed in
-  React.useEffect(() => {
-    if (user) {
-      router.push('/dashboard');
-    }
-  }, [user, router]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -43,77 +34,12 @@ const AuthPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
-
-    try {
-      if (isSignUp) {
-        // Sign Up Flow
-        if (formData.password !== formData.confirmPassword) {
-          setError('Passwords do not match');
-          setIsLoading(false);
-          return;
-        }
-
-        if (!signUp || !signUpLoaded) return;
-
-        const result = await signUp.create({
-          emailAddress: formData.email,
-          password: formData.password,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-        });
-
-        if (result.status === 'complete') {
-          await setSignUpActive({ session: result.createdSessionId });
-          router.push('/dashboard');
-        } else {
-          // Handle email verification if needed
-          console.log('Verification required:', result);
-          // You might want to show a verification screen here
-        }
-      } else {
-        // Sign In Flow
-        if (!signIn || !signInLoaded) return;
-
-        const result = await signIn.create({
-          identifier: formData.email,
-          password: formData.password,
-        });
-
-        if (result.status === 'complete') {
-          await setActive({ session: result.createdSessionId });
-          router.push('/dashboard');
-        }
-      }
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
+    setError('Auth coming soon. Book a demo to get started.');
+    setIsLoading(false);
   };
 
   const handleGoogleAuth = async () => {
-    if (!signIn || !signUp) return;
-    
-    setIsLoading(true);
-    try {
-      if (isSignUp) {
-        await signUp.authenticateWithRedirect({
-          strategy: 'oauth_google',
-          redirectUrl: window.location.origin,
-          redirectUrlComplete: '/dashboard'
-        });
-      } else {
-        await signIn.authenticateWithRedirect({
-          strategy: 'oauth_google',
-          redirectUrl: window.location.origin,
-          redirectUrlComplete: '/dashboard'
-        });
-      }
-    } catch (error) {
-      console.error('Google auth error:', error);
-      setIsLoading(false);
-    }
+    setError('Auth coming soon. Book a demo to get started.');
   };
 
   if (!signInLoaded || !signUpLoaded) {

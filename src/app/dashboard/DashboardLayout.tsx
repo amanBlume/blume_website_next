@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Menu, 
   X, 
@@ -16,7 +16,6 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
-import { UserButton, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -26,18 +25,10 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Mobile sidebar
-  const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(true); // Desktop sidebar collapse
-  const { user, isLoaded, isSignedIn } = useUser();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
-
-  // Handle authentication on client side
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/auth');
-    }
-  }, [isLoaded, isSignedIn, router]);
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
@@ -47,27 +38,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   ];
 
   const isActive = (href: string) => pathname === href;
-
-  // Show loading screen while checking authentication
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            {/* <Heart className="h-8 w-8 text-coral-500 animate-pulse" fill="currentColor" /> */}
-            <span className="text-2xl font-bold text-navy-900">Blume Health</span>
-          </div>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coral-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Don't render dashboard if not signed in (will redirect)
-  if (!isSignedIn) {
-    return null;
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -136,21 +106,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           {/* User info at bottom */}
           <div className="flex-shrink-0 border-t border-gray-200 p-4">
             <div className={`flex items-center ${isDesktopSidebarCollapsed ? 'justify-center' : 'space-x-3'}`}>
-              <UserButton 
-                appearance={{
-                  elements: {
-                    avatarBox: "w-8 h-8"
-                  }
-                }}
-              />
+              <div className="w-8 h-8 rounded-full bg-coral-500 flex items-center justify-center">
+                <User className="w-4 h-4 text-white" />
+              </div>
               {!isDesktopSidebarCollapsed && (
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    {user?.fullName || user?.emailAddresses[0]?.emailAddress}
-                  </p>
-                  <p className="text-xs text-gray-500 truncate">
-                    Healthcare Provider
-                  </p>
+                  <p className="text-sm font-medium text-gray-900 truncate">Provider</p>
+                  <p className="text-xs text-gray-500 truncate">Healthcare Provider</p>
                 </div>
               )}
             </div>
@@ -206,20 +168,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
             <div className="flex-shrink-0 border-t border-gray-200 p-4">
               <div className="flex items-center space-x-3">
-                <UserButton 
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-8 h-8"
-                    }
-                  }}
-                />
+                <div className="w-8 h-8 rounded-full bg-coral-500 flex items-center justify-center">
+                  <User className="w-4 h-4 text-white" />
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    {user?.fullName || user?.emailAddresses[0]?.emailAddress}
-                  </p>
-                  <p className="text-xs text-gray-500 truncate">
-                    Healthcare Provider
-                  </p>
+                  <p className="text-sm font-medium text-gray-900 truncate">Provider</p>
+                  <p className="text-xs text-gray-500 truncate">Healthcare Provider</p>
                 </div>
               </div>
             </div>
@@ -260,14 +214,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <div className="flex justify-end space-x-4">
               <button className="p-2 text-gray-400 hover:text-gray-500 relative">
                 <Bell className="h-6 w-6" />
-                {/* Notification badge */}
                 <span className="absolute -top-1 -right-1 h-4 w-4 bg-coral-500 text-white text-xs rounded-full flex items-center justify-center">
                   3
                 </span>
               </button>
-              <div className="lg:hidden">
-                <UserButton />
-              </div>
             </div>
           </div>
         </div>

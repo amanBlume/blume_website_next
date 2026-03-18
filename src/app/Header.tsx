@@ -3,23 +3,17 @@
 import React, { useState } from "react";
 import { Menu, X, Heart } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 
 const Header: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { isSignedIn, isLoaded } = useUser();
+  const isSignedIn = false;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Don't show header on dashboard routes when user is authenticated
   const isDashboardRoute = pathname.startsWith('/dashboard');
   const shouldHideHeader = isDashboardRoute && isSignedIn;
-
-  // Don't render anything while loading or if should be hidden
-  if (!isLoaded || shouldHideHeader) {
-    return null;
-  }
 
   return (
     <div className="bg-white shadow-sm sticky top-0 z-50">

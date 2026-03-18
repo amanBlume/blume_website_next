@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useUser } from '@clerk/nextjs';
+import React, { useState } from 'react';
 import { Users, Calendar, TrendingUp, DollarSign,Activity,Clock,Plus,ArrowUpRight,ChevronRight,Check,User,CreditCard,Settings,LucideIcon,Menu,X,Phone,Mail} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -16,8 +15,7 @@ interface Stage {
 }
 
 const DashboardPage: React.FC = () => {
-  const router = useRouter()
-  const { user, isLoaded } = useUser();
+  const router = useRouter();
   
   // Stage management with proper typing
   const [currentStage, setCurrentStage] = useState<number>(1);
